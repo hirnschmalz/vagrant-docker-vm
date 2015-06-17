@@ -5,12 +5,12 @@
     line:  '/usr/local/bin/ct system:startup > /dev/null'
     state: present
 
-- name: Copy local configuration
-  copy:
-    src:   roles/clitools/files/clitools.ini
+- name: Deploy local configuration
+  template:
+    src:   roles/clitools/templates/clitools.ini.j2
     dest:  /etc/clitools.ini
     owner: vagrant
-    group: vagrant
+    group: root
     mode:  0644
 
 - name: Copy cron configuration

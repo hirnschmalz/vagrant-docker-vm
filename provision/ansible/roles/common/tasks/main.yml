@@ -23,3 +23,13 @@
   tags:
     - bootstrap
     - maintenance
+
+- name: Configure sysctl settings
+  include: sysctl.yml
+  tags:
+    - bootstrap
+
+- name: Configure locale settings
+  include: locale.yml
+  tags:
+    - bootstrap

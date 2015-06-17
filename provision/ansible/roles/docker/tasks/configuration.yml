@@ -1,5 +1,3 @@
-- include_vars: /vagrant/vm.yml
-
 - name: Configure docker
   lineinfile:
     dest: '/etc/default/docker'
@@ -34,7 +32,6 @@
     dest: /opt/docker/bin/
     delete: no
 
-
 - name: Install docker-compose
   shell: "curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/bin/docker-compose.1.2.0"
   args:
@@ -64,3 +61,16 @@
    - { src: '/opt/docker/bin/docker-compose.1.2.0', dest: '/usr/local/bin/docker-compose' }
    - { src: '/opt/docker/bin/compose-wrapper.sh',   dest: '/usr/local/bin/dcc' }
 
+#############################
+# Apparmor profile
+#############################
+
+- name: Fix AppArmor profile
+  lineinfile:
+    dest:        '/etc/apparmor.d/docker'
+    insertafter: '[\s]*capability'
+    line:        '  ptrace peer=docker-default,'
+    state:       present
+
+- name: Reload AppArmor
+  command: 'service apparmor reload'

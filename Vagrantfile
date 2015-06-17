@@ -121,6 +121,33 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     #################
+    # Provider: Parallels
+    #################
+
+    # Parallels
+    config.vm.provider :parallels do |v|
+        v.name   = VAGRANT_VM_NAME
+        v.memory = VAGRANT_VM_MEMORY
+        v.cpus   = VAGRANT_VM_CPUS
+        v.optimize_power_consumption = false
+        v.update_guest_tools = true
+
+        v.customize(
+            "post-import", [
+                "set", :id,
+                 "--device-add", "hdd",
+                 "--image", "#{VAGRANT_ROOT}/disks/parallels-disk",
+                 "--type", "expand"
+            ]
+        )
+
+        v.customize "pre-boot", [
+          "set", :id,
+          "--device-bootorder", "hdd0 hdd1"
+        ]
+    end
+
+    #################
     # Networking
     #################
     config.vm.network "private_network", ip: VAGRANT_VM_IP_INTERNAL
